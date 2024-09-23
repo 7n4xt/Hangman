@@ -1,4 +1,4 @@
 package main
 
-type game struct {
+func main() {
 }
