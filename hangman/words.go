@@ -9,7 +9,7 @@ import (
 
 var words = make([]string, 0, 50)
 
-func wordscanner(filename string) error {
+func WordScanner(filename string) error {
 	f, err := os.Open(filename)
 	if err != nil {
 		return err
