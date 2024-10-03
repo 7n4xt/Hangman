@@ -23,16 +23,17 @@ func ShowMainMenu() {
 		return
 	default:
 		fmt.Println("Invalid Choice !!")
+		ShowMainMenu()
 	}
 
 }
 
 func ShowRules() {
-	fmt.Println("\n                === Rules Menu ===")
-	fmt.Println("The rules follow the traditional Hangman game format.  ")
-	fmt.Println("You have a word to guess with a total of 8 attempts.")
-	fmt.Println("Additionally, you have the option to guess the entire word at once,")
-	fmt.Println("but if your guess is incorrect, you will lose 2 attempts.  ")
+	fmt.Println("\n                                        === Rules Menu ===")
+	fmt.Println("                             The rules follow the traditional Hangman game format.  ")
+	fmt.Println("                              You have a word to guess with a total of 8 attempts.")
+	fmt.Println("                         Additionally, you have the option to guess the entire word at once,")
+	fmt.Println("                             but if your guess is incorrect, you will lose 2 attempts.  ")
 
 	ShowMainMenu()
 }

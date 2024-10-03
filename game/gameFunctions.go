@@ -21,6 +21,7 @@ func showProgress(word string, guessedChars map[string]bool) {
 	}
 	fmt.Println()
 }
+
 func revealTwoLetters(word string) map[string]bool {
 	guessedChars := make(map[string]bool)
 	wordChars := []rune(word)
@@ -83,11 +84,13 @@ func StartGame() {
 		return
 	}
 
+	secretWord = strings.ToLower(secretWord)
+
 	guessedChars := revealTwoLetters(secretWord)
 	mistakeCount := 0
 
 	fmt.Println("Welcome to Hangman! Two letters have been revealed to help you start.")
-	fmt.Println("Press 'Q' anytime to quit the game.")
+	fmt.Println("Press '0' anytime to quit the game.")
 
 	for mistakeCount < maxMistakes {
 		ShowGallows(mistakeCount)
@@ -100,12 +103,13 @@ func StartGame() {
 		guess, _ := reader.ReadString('\n')
 		guess = strings.TrimSpace(strings.ToLower(guess))
 
-		if guess == "q" {
+		if guess == "0" {
 			fmt.Println("Game aborted.")
 			return
 		}
 
 		if len(guess) == 1 {
+
 			if _, exists := guessedChars[guess]; exists {
 				fmt.Println("You've already guessed this character.")
 				continue
@@ -118,21 +122,26 @@ func StartGame() {
 				fmt.Println("Wrong guess.")
 				mistakeCount++
 			}
-		} else if len(guess) == len(secretWord) {
-			if guess == secretWord {
-				fmt.Println("Congratulations! You've guessed the word:", secretWord)
-				return
-			} else {
-				fmt.Println("Wrong guess.")
-				mistakeCount++
-			}
 		} else {
-			fmt.Println("Invalid input.")
+			if guess == secretWord {
+				fmt.Println("\nCongratulations! You've guessed the word:", secretWord)
+				ShowGallows(mistakeCount)
+				return
+			} else if guess != "" {
+				fmt.Println("Wrong word guess!")
+				mistakeCount++
+			} else {
+				fmt.Println("Invalid input.")
+			}
 		}
 
 		if isWordDiscovered(secretWord, guessedChars) {
-			fmt.Println("Well done! You've uncovered the word:", secretWord)
+			fmt.Println("\nWell done! You've uncovered the word:", secretWord)
+			ShowGallows(mistakeCount)
 			return
 		}
 	}
+
+	fmt.Println("\nGame over. The word was:", secretWord)
+	ShowGallows(mistakeCount)
 }
