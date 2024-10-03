@@ -7,24 +7,21 @@ func ShowMainMenu() {
 	fmt.Println("\n                                        === Main Menu ===")
 	fmt.Println("\n                                         1. Start The Game")
 	fmt.Println("\n                                          2. Rules")
-	fmt.Println("\n                                           0. Quit")
+	fmt.Println("\n                                           3. Quit")
 
 	var choice int
 
 	fmt.Scanln(&choice)
-
-	if choice == 0 {
-		fmt.Println("See You Next Time.....")
-	}
 
 	switch choice {
 	case 1:
 		StartGame()
 	case 2:
 		ShowRules()
-
+	case 3:
+		fmt.Println("See You Next Time.....")
+		return
 	default:
-		ShowMainMenu()
 		fmt.Println("Invalid Choice !!")
 	}
 
@@ -40,7 +37,7 @@ func ShowRules() {
 	ShowMainMenu()
 }
 
-func showGallows(mistakes int) {
+func ShowGallows(mistakes int) {
 	gallowsStages := []string{
 		`
         +---+

@@ -3,7 +3,9 @@ package game
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -18,6 +20,35 @@ func showProgress(word string, guessedChars map[string]bool) {
 		}
 	}
 	fmt.Println()
+}
+func revealTwoLetters(word string) map[string]bool {
+	guessedChars := make(map[string]bool)
+	wordChars := []rune(word)
+	uniqueChars := make(map[string]bool)
+
+	for _, char := range wordChars {
+		uniqueChars[string(char)] = true
+	}
+
+	var uniqueCharSlice []string
+	for char := range uniqueChars {
+		uniqueCharSlice = append(uniqueCharSlice, char)
+	}
+
+	numToReveal := 2
+	if len(uniqueCharSlice) < 2 {
+		numToReveal = len(uniqueCharSlice)
+	}
+
+	rand.Shuffle(len(uniqueCharSlice), func(i, j int) {
+		uniqueCharSlice[i], uniqueCharSlice[j] = uniqueCharSlice[j], uniqueCharSlice[i]
+	})
+
+	for i := 0; i < numToReveal; i++ {
+		guessedChars[uniqueCharSlice[i]] = true
+	}
+
+	return guessedChars
 }
 
 func isWordDiscovered(word string, guessedChars map[string]bool) bool {
@@ -38,19 +69,28 @@ func listGuessedChars(guessedChars map[string]bool) string {
 }
 
 func StartGame() {
-	secretWord, err := WordScanner("Documents/Ynov 2425/Module Immersion/Hangman-gowords.txt") // Here you put the file path of the text file
+	execDir, err := os.Getwd()
+	if err != nil {
+		fmt.Println("Error getting current directory:", err)
+		return
+	}
+
+	wordsPath := filepath.Join(execDir, "words.txt")
+
+	secretWord, err := WordScanner(wordsPath)
 	if err != nil {
 		fmt.Println("Error loading words:", err)
 		return
 	}
 
-	guessedChars := make(map[string]bool)
+	guessedChars := revealTwoLetters(secretWord)
 	mistakeCount := 0
 
+	fmt.Println("Welcome to Hangman! Two letters have been revealed to help you start.")
 	fmt.Println("Press 'Q' anytime to quit the game.")
 
 	for mistakeCount < maxMistakes {
-		showGallows(mistakeCount)
+		ShowGallows(mistakeCount)
 		showProgress(secretWord, guessedChars)
 		fmt.Println("Guessed characters:", listGuessedChars(guessedChars))
 		fmt.Printf("Mistakes: %d / %d\n", mistakeCount, maxMistakes)
@@ -83,6 +123,8 @@ func StartGame() {
 				fmt.Println("Congratulations! You've guessed the word:", secretWord)
 				return
 			} else {
+				fmt.Println("Wrong guess.")
+				mistakeCount++
 			}
 		} else {
 			fmt.Println("Invalid input.")
@@ -93,6 +135,4 @@ func StartGame() {
 			return
 		}
 	}
-
-	fmt.Println("Game over. The word was:", secretWord)
 }
