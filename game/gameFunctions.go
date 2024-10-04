@@ -89,7 +89,6 @@ func StartGame() {
 	guessedChars := revealTwoLetters(secretWord)
 	mistakeCount := 0
 
-	fmt.Println("Welcome to Hangman! Two letters have been revealed to help you start.")
 	fmt.Println("Press '0' anytime to quit the game.")
 
 	for mistakeCount < maxMistakes {
@@ -129,7 +128,7 @@ func StartGame() {
 				return
 			} else if guess != "" {
 				fmt.Println("Wrong word guess!")
-				mistakeCount++
+				mistakeCount += 1
 			} else {
 				fmt.Println("Invalid input.")
 			}
@@ -138,7 +137,6 @@ func StartGame() {
 		if isWordDiscovered(secretWord, guessedChars) {
 			fmt.Println("\nWell done! You've uncovered the word:", secretWord)
 			ShowGallows(mistakeCount)
-			return
 		}
 	}
 
